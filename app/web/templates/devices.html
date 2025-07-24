@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}Devices - SmartHomeLite{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">Devices</h1>
+        <div class="flex space-x-2">
+            <button 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition duration-150"
+                hx-get="/api/devices/discover"
+                hx-trigger="click"
+                hx-target="#devices-list"
+                hx-swap="innerHTML"
+                hx-indicator="#spinner">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Discover Devices
+                </span>
+            </button>
+            
+            <button 
+                class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition duration-150"
+                x-data="{}"
+                x-on:click="$dispatch('open-modal', 'add-device-modal')">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    Add Device
+                </span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Loading spinner -->
+    <div id="spinner" class="htmx-indicator flex justify-center">
+        <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+    
+    <!-- Filters -->
+    <div class="bg-white rounded-lg shadow-md p-4">
+        <div class="flex flex-wrap gap-4">
+            <div>
+                <label for="type-filter" class="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
+                <select id="type-filter" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    <option value="">All Types</option>
+                    <option value="bluetooth">Bluetooth</option>
+                    <option value="mqtt">MQTT</option>
+                    <option value="virtual">Virtual</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div>
+                <label for="status-filter" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select id="status-filter" class="rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    <option value="">All Statuses</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="unknown">Unknown</option>
+                </select>
+            </div>
+            
+            <div class="flex-grow">
+                <label for="search" class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                <input type="text" id="search" placeholder="Search devices..." class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Devices list -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-800">All Devices</h2>
+        </div>
+        
+        <div id="devices-list" class="divide-y divide-gray-200">
+            {% if devices %}
+                {% for device in devices %}
+                <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition duration-150">
+                    <div class="flex items-center">
+                        <!-- Device icon based on type -->
+                        {% if device.type == "bluetooth" %}
+                        <div class="p-2 rounded-full bg-indigo-100 text-indigo-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+                        {% elif device.type == "mqtt" %}
+                        <div class="p-2 rounded-full bg-purple-100 text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                        </div>
+                        {% elif device.type == "virtual" %}
+                        <div class="p-2 rounded-full bg-yellow-100 text-yellow-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                        {% else %}
+                        <div class="p-2 rounded-full bg-gray-100 text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12h.01M12 12h.01M12 12h.01M12 12h.01" />
+                            </svg>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="ml-4">
+                            <a href="/devices/{{ device.id }}" class="text-lg font-medium text-gray-800 hover:text-blue-600 transition duration-150">{{ device.name }}</a>
+                            <p class="text-sm text-gray-500">{{ device.type|title }} • {{ device.address or 'No address' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <!-- Status indicator -->
+                        {% if device.status in ['online', 'connected', 'on'] %}
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Online</span>
+                        {% elif device.status in ['offline', 'disconnected', 'off'] %}
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">Offline</span>
+                        {% else %}
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Unknown</span>
+                        {% endif %}
+                        
+                        <!-- Actions -->
+                        <div class="ml-4 flex space-x-2">
+                            <a href="/devices/{{ device.id }}" class="text-gray-400 hover:text-blue-600 transition duration-150">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </a>
+                            
+                            <button 
+                                class="text-gray-400 hover:text-yellow-600 transition duration-150"
+                                x-data="{}"
+                                x-on:click="$dispatch('open-modal', 'edit-device-modal-{{ device.id }}')">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                </svg>
+                            </button>
+                            
+                            <button 
+                                class="text-gray-400 hover:text-red-600 transition duration-150"
+                                hx-delete="/api/devices/{{ device.id }}"
+                                hx-confirm="Are you sure you want to delete this device?"
+                                hx-target="#devices-list"
+                                hx-swap="innerHTML">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="px-6 py-8 text-center">
+                    <p class="text-gray-500">No devices found. Click "Discover Devices" to scan for new devices or "Add Device" to add one manually.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Device Modal -->
+<div
+    x-data="{ open: false }"
+    x-show="open"
+    x-on:open-modal.window="$event.detail == 'add-device-modal' ? open = true : null"
+    x-on:keydown.escape.window="open = false"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 transform scale-90"
+    x-transition:enter-end="opacity-100 transform scale-100"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 transform scale-100"
+    x-transition:leave-end="opacity-0 transform scale-90"
+    class="fixed inset-0 z-50 overflow-y-auto" 
+    x-cloak>
+    
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <!-- Overlay -->
+        <div 
+            x-show="open" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black bg-opacity-50" 
+            x-on:click="open = false">
+        </div>
+        
+        <!-- Modal content -->
+        <div 
+            x-show="open"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-4"
+            class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 overflow-hidden">
+            
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Add Device</h3>
+                <button 
+                    type="button" 
+                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    x-on:click="open = false">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <form 
+                hx-post="/api/devices"
+                hx-target="#devices-list"
+                hx-swap="innerHTML"
+                x-on:submit="open = false">
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Device Name</label>
+                        <input type="text" id="name" name="name" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                    
+                    <div>
+                        <label for="type" class="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
+                        <select id="type" name="type" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="bluetooth">Bluetooth</option>
+                            <option value="mqtt">MQTT</option>
+                            <option value="virtual">Virtual</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700 mb-1">Device Address (optional)</label>
+                        <input type="text" id="address" name="address" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button 
+                        type="button" 
+                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        x-on:click="open = false">
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Add Device
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Device Modals (one for each device) -->
+{% for device in devices %}
+<div
+    x-data="{ open: false }"
+    x-show="open"
+    x-on:open-modal.window="$event.detail == 'edit-device-modal-{{ device.id }}' ? open = true : null"
+    x-on:keydown.escape.window="open = false"
+    x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 transform scale-90"
+    x-transition:enter-end="opacity-100 transform scale-100"
+    x-transition:leave="transition ease-in duration-300"
+    x-transition:leave-start="opacity-100 transform scale-100"
+    x-transition:leave-end="opacity-0 transform scale-90"
+    class="fixed inset-0 z-50 overflow-y-auto" 
+    x-cloak>
+    
+    <div class="flex items-center justify-center min-h-screen px-4">
+        <!-- Overlay -->
+        <div 
+            x-show="open" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black bg-opacity-50" 
+            x-on:click="open = false">
+        </div>
+        
+        <!-- Modal content -->
+        <div 
+            x-show="open"
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0 transform translate-y-4"
+            x-transition:enter-end="opacity-100 transform translate-y-0"
+            x-transition:leave="transition ease-in duration-300"
+            x-transition:leave-start="opacity-100 transform translate-y-0"
+            x-transition:leave-end="opacity-0 transform translate-y-4"
+            class="relative bg-white rounded-lg shadow-xl max-w-md w-full p-6 overflow-hidden">
+            
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-gray-900">Edit Device</h3>
+                <button 
+                    type="button" 
+                    class="text-gray-400 hover:text-gray-500 focus:outline-none"
+                    x-on:click="open = false">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <form 
+                hx-put="/api/devices/{{ device.id }}"
+                hx-target="#devices-list"
+                hx-swap="innerHTML"
+                x-on:submit="open = false">
+                
+                <div class="space-y-4">
+                    <div>
+                        <label for="name-{{ device.id }}" class="block text-sm font-medium text-gray-700 mb-1">Device Name</label>
+                        <input type="text" id="name-{{ device.id }}" name="name" value="{{ device.name }}" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                    
+                    <div>
+                        <label for="type-{{ device.id }}" class="block text-sm font-medium text-gray-700 mb-1">Device Type</label>
+                        <select id="type-{{ device.id }}" name="type" required class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="bluetooth" {% if device.type == 'bluetooth' %}selected{% endif %}>Bluetooth</option>
+                            <option value="mqtt" {% if device.type == 'mqtt' %}selected{% endif %}>MQTT</option>
+                            <option value="virtual" {% if device.type == 'virtual' %}selected{% endif %}>Virtual</option>
+                            <option value="other" {% if device.type == 'other' %}selected{% endif %}>Other</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label for="address-{{ device.id }}" class="block text-sm font-medium text-gray-700 mb-1">Device Address (optional)</label>
+                        <input type="text" id="address-{{ device.id }}" name="address" value="{{ device.address or '' }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    </div>
+                    
+                    <div>
+                        <label for="status-{{ device.id }}" class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select id="status-{{ device.id }}" name="status" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                            <option value="online" {% if device.status == 'online' %}selected{% endif %}>Online</option>
+                            <option value="offline" {% if device.status == 'offline' %}selected{% endif %}>Offline</option>
+                            <option value="unknown" {% if device.status == 'unknown' %}selected{% endif %}>Unknown</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="mt-6 flex justify-end space-x-3">
+                    <button 
+                        type="button" 
+                        class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        x-on:click="open = false">
+                        Cancel
+                    </button>
+                    <button 
+                        type="submit" 
+                        class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Save Changes
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Filter devices based on type, status, and search query
+    document.addEventListener('DOMContentLoaded', function() {
+        const typeFilter = document.getElementById('type-filter');
+        const statusFilter = document.getElementById('status-filter');
+        const searchInput = document.getElementById('search');
+        const devicesList = document.getElementById('devices-list');
+        
+        function filterDevices() {
+            const typeValue = typeFilter.value.toLowerCase();
+            const statusValue = statusFilter.value.toLowerCase();
+            const searchValue = searchInput.value.toLowerCase();
+            
+            const devices = devicesList.querySelectorAll('div[class*="px-6 py-4 flex"]');
+            
+            devices.forEach(device => {
+                const deviceType = device.querySelector('p[class*="text-sm text-gray-500"]').textContent.toLowerCase();
+                const deviceStatus = device.querySelector('span[class*="px-3 py-1 rounded-full"]').textContent.toLowerCase();
+                const deviceName = device.querySelector('a[class*="text-lg font-medium"]').textContent.toLowerCase();
+                
+                const typeMatch = !typeValue || deviceType.includes(typeValue);
+                const statusMatch = !statusValue || deviceStatus.includes(statusValue);
+                const searchMatch = !searchValue || deviceName.includes(searchValue);
+                
+                if (typeMatch && statusMatch && searchMatch) {
+                    device.style.display = '';
+                } else {
+                    device.style.display = 'none';
+                }
+            });
+        }
+        
+        typeFilter.addEventListener('change', filterDevices);
+        statusFilter.addEventListener('change', filterDevices);
+        searchInput.addEventListener('input', filterDevices);
+    });
+</script>
+{% endblock %}

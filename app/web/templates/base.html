@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartHomeLite{% endblock %}</title>
+    
+    <!-- HTMX for interactive UI without JavaScript -->
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+    
+    <!-- Tailwind CSS for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Custom styles -->
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+    
+    <!-- Alpine.js for interactive components -->
+    <script defer src="https://unpkg.com/alpinejs@3.10.5/dist/cdn.min.js"></script>
+    
+    {% block head %}{% endblock %}
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <!-- Navigation -->
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo and title -->
+                <div class="flex items-center space-x-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                    </svg>
+                    <span class="font-bold text-xl">SmartHomeLite</span>
+                </div>
+                
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button type="button" class="text-white hover:text-gray-200 focus:outline-none focus:text-gray-200" aria-label="Toggle menu" x-data="{ open: false }" @click="open = !open" :aria-expanded="open">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop navigation -->
+                <div class="hidden md:flex space-x-4">
+                    <a href="/" class="py-2 px-3 rounded hover:bg-blue-700 transition duration-150">Dashboard</a>
+                    <a href="/devices" class="py-2 px-3 rounded hover:bg-blue-700 transition duration-150">Devices</a>
+                    <a href="/settings" class="py-2 px-3 rounded hover:bg-blue-700 transition duration-150">Settings</a>
+                    <a href="/about" class="py-2 px-3 rounded hover:bg-blue-700 transition duration-150">About</a>
+                </div>
+            </div>
+            
+            <!-- Mobile navigation -->
+            <div class="md:hidden" x-data="{ open: false }" x-show="open" x-cloak>
+                <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                    <a href="/" class="block py-2 px-3 rounded hover:bg-blue-700 transition duration-150">Dashboard</a>
+                    <a href="/devices" class="block py-2 px-3 rounded hover:bg-blue-700 transition duration-150">Devices</a>
+                    <a href="/settings" class="block py-2 px-3 rounded hover:bg-blue-700 transition duration-150">Settings</a>
+                    <a href="/about" class="block py-2 px-3 rounded hover:bg-blue-700 transition duration-150">About</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main content -->
+    <main class="flex-grow container mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-4">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-4 md:mb-0">
+                    <p>&copy; 2023 SmartHomeLite. All rights reserved.</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="/about" class="hover:text-gray-300 transition duration-150">About</a>
+                    <a href="https://github.com/yourusername/smarthomelite" class="hover:text-gray-300 transition duration-150">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    {% block scripts %}{% endblock %}
+</body>
+</html>

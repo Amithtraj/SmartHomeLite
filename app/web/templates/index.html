@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SmartHomeLite{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
+        <div>
+            <button 
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition duration-150"
+                hx-get="/api/devices/discover"
+                hx-trigger="click"
+                hx-target="#devices-container"
+                hx-swap="innerHTML"
+                hx-indicator="#spinner">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    </svg>
+                    Discover Devices
+                </span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Loading spinner -->
+    <div id="spinner" class="htmx-indicator flex justify-center">
+        <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+    </div>
+    
+    <!-- Stats cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Total devices -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500 text-sm font-medium">Total Devices</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ device_counts.total }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Online devices -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-green-100 text-green-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500 text-sm font-medium">Online Devices</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ device_counts.online }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bluetooth devices -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500 text-sm font-medium">Bluetooth Devices</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ device_counts.bluetooth }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MQTT devices -->
+        <div class="bg-white rounded-lg shadow-md p-6">
+            <div class="flex items-center">
+                <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500 text-sm font-medium">MQTT Devices</p>
+                    <p class="text-2xl font-semibold text-gray-800">{{ device_counts.mqtt }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Devices list -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-800">Recent Devices</h2>
+        </div>
+        
+        <div id="devices-container" class="divide-y divide-gray-200">
+            {% if devices %}
+                {% for device in devices %}
+                <div class="px-6 py-4 flex items-center justify-between hover:bg-gray-50 transition duration-150">
+                    <div class="flex items-center">
+                        <!-- Device icon based on type -->
+                        {% if device.type == "bluetooth" %}
+                        <div class="p-2 rounded-full bg-indigo-100 text-indigo-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+                        {% elif device.type == "mqtt" %}
+                        <div class="p-2 rounded-full bg-purple-100 text-purple-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                            </svg>
+                        </div>
+                        {% elif device.type == "virtual" %}
+                        <div class="p-2 rounded-full bg-yellow-100 text-yellow-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                            </svg>
+                        </div>
+                        {% else %}
+                        <div class="p-2 rounded-full bg-gray-100 text-gray-600">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 12h.01M12 12h.01M12 12h.01M12 12h.01" />
+                            </svg>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="ml-4">
+                            <a href="/devices/{{ device.id }}" class="text-lg font-medium text-gray-800 hover:text-blue-600 transition duration-150">{{ device.name }}</a>
+                            <p class="text-sm text-gray-500">{{ device.type|title }} • {{ device.address or 'No address' }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <!-- Status indicator -->
+                        {% if device.status in ['online', 'connected', 'on'] %}
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">Online</span>
+                        {% elif device.status in ['offline', 'disconnected', 'off'] %}
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">Offline</span>
+                        {% else %}
+                        <span class="px-3 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">Unknown</span>
+                        {% endif %}
+                        
+                        <!-- Quick actions -->
+                        <div class="ml-4">
+                            <button 
+                                class="text-gray-400 hover:text-blue-600 transition duration-150"
+                                hx-get="/devices/{{ device.id }}"
+                                hx-trigger="click"
+                                hx-target="#main-content"
+                                hx-swap="innerHTML">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="px-6 py-8 text-center">
+                    <p class="text-gray-500">No devices found. Click "Discover Devices" to scan for new devices.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Refresh device list periodically
+    setInterval(function() {
+        htmx.ajax('GET', '/devices', {target: '#devices-container', swap: 'innerHTML'});
+    }, 30000); // Every 30 seconds
+</script>
+{% endblock %}

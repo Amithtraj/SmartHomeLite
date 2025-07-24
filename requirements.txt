@@ -1,0 +1,31 @@
+# Web Framework
+fastapi>=0.95.0
+uvicorn>=0.22.0
+jinja2>=3.1.2
+python-multipart>=0.0.6
+
+# API Documentation
+pydantic>=2.0.0
+
+# Web UI
+htmx>=0.0.1
+
+# Bluetooth
+# Note: PyBluez might require additional system dependencies in Termux
+# If PyBluez installation fails, the application will fall back to using bluetoothctl
+pybluez>=0.23; platform_system != "Windows"
+
+# MQTT (Optional)
+paho-mqtt>=2.1.0
+
+# Voice Recognition (Optional)
+# Note: These packages might require additional system dependencies in Termux
+speech_recognition>=3.10.0
+vosk>=0.3.45
+
+# Testing
+pytest>=7.3.1
+
+# Utilities
+python-dotenv>=1.0.0
+loguru>=0.7.0

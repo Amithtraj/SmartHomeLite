@@ -1,0 +1,378 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - SmartHomeLite{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">Settings</h1>
+        <div>
+            <button 
+                id="save-settings-btn"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg shadow-sm transition duration-150"
+                type="submit"
+                form="settings-form">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Save Settings
+                </span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Settings form -->
+    <form id="settings-form" class="space-y-6" hx-put="/api/system/settings" hx-swap="none">
+        <!-- Server Settings -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-medium text-gray-800">Server Settings</h2>
+            </div>
+            
+            <div class="px-6 py-4 space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="server_host" class="block text-sm font-medium text-gray-700 mb-1">Server Host</label>
+                        <input type="text" id="server_host" name="server_host" value="{{ settings.server_host }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="mt-1 text-xs text-gray-500">The host address the server will listen on</p>
+                    </div>
+                    
+                    <div>
+                        <label for="server_port" class="block text-sm font-medium text-gray-700 mb-1">Server Port</label>
+                        <input type="number" id="server_port" name="server_port" value="{{ settings.server_port }}" min="1" max="65535" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="mt-1 text-xs text-gray-500">The port the server will listen on</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="debug_mode" name="debug_mode" {% if settings.debug_mode %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="debug_mode" class="ml-2 block text-sm text-gray-900">Debug Mode</label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Enable detailed logging and debugging information</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bluetooth Settings -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-medium text-gray-800">Bluetooth Settings</h2>
+            </div>
+            
+            <div class="px-6 py-4 space-y-4">
+                <div>
+                    <label for="bluetooth_scan_interval" class="block text-sm font-medium text-gray-700 mb-1">Scan Interval (seconds)</label>
+                    <input type="number" id="bluetooth_scan_interval" name="bluetooth_scan_interval" value="{{ settings.bluetooth_scan_interval }}" min="10" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    <p class="mt-1 text-xs text-gray-500">How often to scan for new Bluetooth devices (in seconds)</p>
+                </div>
+                
+                <div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="bluetooth_auto_connect" name="bluetooth_auto_connect" {% if settings.bluetooth_auto_connect %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="bluetooth_auto_connect" class="ml-2 block text-sm text-gray-900">Auto-Connect</label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Automatically connect to known Bluetooth devices when discovered</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- MQTT Settings -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-medium text-gray-800">MQTT Settings</h2>
+            </div>
+            
+            <div class="px-6 py-4 space-y-4">
+                <div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="mqtt_enabled" name="mqtt_enabled" {% if settings.mqtt_enabled %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="mqtt_enabled" class="ml-2 block text-sm text-gray-900">Enable MQTT</label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Enable MQTT client for device communication</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="mqtt_broker" class="block text-sm font-medium text-gray-700 mb-1">MQTT Broker</label>
+                        <input type="text" id="mqtt_broker" name="mqtt_broker" value="{{ settings.mqtt_broker }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="mt-1 text-xs text-gray-500">The MQTT broker address (e.g., localhost)</p>
+                    </div>
+                    
+                    <div>
+                        <label for="mqtt_port" class="block text-sm font-medium text-gray-700 mb-1">MQTT Port</label>
+                        <input type="number" id="mqtt_port" name="mqtt_port" value="{{ settings.mqtt_port }}" min="1" max="65535" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="mt-1 text-xs text-gray-500">The MQTT broker port (default: 1883)</p>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="mqtt_username" class="block text-sm font-medium text-gray-700 mb-1">MQTT Username</label>
+                        <input type="text" id="mqtt_username" name="mqtt_username" value="{{ settings.mqtt_username }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="mt-1 text-xs text-gray-500">Username for MQTT authentication (optional)</p>
+                    </div>
+                    
+                    <div>
+                        <label for="mqtt_password" class="block text-sm font-medium text-gray-700 mb-1">MQTT Password</label>
+                        <input type="password" id="mqtt_password" name="mqtt_password" value="{{ settings.mqtt_password }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <p class="mt-1 text-xs text-gray-500">Password for MQTT authentication (optional)</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="mqtt_topic_prefix" class="block text-sm font-medium text-gray-700 mb-1">Topic Prefix</label>
+                    <input type="text" id="mqtt_topic_prefix" name="mqtt_topic_prefix" value="{{ settings.mqtt_topic_prefix }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    <p class="mt-1 text-xs text-gray-500">Prefix for all MQTT topics (e.g., smarthome/)</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Voice Recognition Settings -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-medium text-gray-800">Voice Recognition</h2>
+            </div>
+            
+            <div class="px-6 py-4 space-y-4">
+                <div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="voice_enabled" name="voice_enabled" {% if settings.voice_enabled %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="voice_enabled" class="ml-2 block text-sm text-gray-900">Enable Voice Recognition</label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Enable voice command recognition</p>
+                </div>
+                
+                <div>
+                    <label for="voice_engine" class="block text-sm font-medium text-gray-700 mb-1">Voice Engine</label>
+                    <select id="voice_engine" name="voice_engine" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <option value="google" {% if settings.voice_engine == 'google' %}selected{% endif %}>Google Speech Recognition</option>
+                        <option value="vosk" {% if settings.voice_engine == 'vosk' %}selected{% endif %}>Vosk (Offline)</option>
+                    </select>
+                    <p class="mt-1 text-xs text-gray-500">The voice recognition engine to use</p>
+                </div>
+                
+                <div>
+                    <label for="voice_trigger_phrase" class="block text-sm font-medium text-gray-700 mb-1">Trigger Phrase</label>
+                    <input type="text" id="voice_trigger_phrase" name="voice_trigger_phrase" value="{{ settings.voice_trigger_phrase }}" class="w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                    <p class="mt-1 text-xs text-gray-500">The phrase that triggers voice command recognition (e.g., "Hey Home")</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Security Settings -->
+        <div class="bg-white rounded-lg shadow-md overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-medium text-gray-800">Security</h2>
+            </div>
+            
+            <div class="px-6 py-4 space-y-4">
+                <div>
+                    <div class="flex items-center">
+                        <input type="checkbox" id="api_key_required" name="api_key_required" {% if settings.api_key_required %}checked{% endif %} class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                        <label for="api_key_required" class="ml-2 block text-sm text-gray-900">Require API Key</label>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">Require an API key for all API requests</p>
+                </div>
+                
+                <div>
+                    <label for="api_key" class="block text-sm font-medium text-gray-700 mb-1">API Key</label>
+                    <div class="flex">
+                        <input type="password" id="api_key" name="api_key" value="{{ settings.api_key }}" class="flex-grow rounded-l-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50">
+                        <button type="button" id="generate-api-key" class="px-4 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-50 text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Generate
+                        </button>
+                    </div>
+                    <p class="mt-1 text-xs text-gray-500">The API key for authentication</p>
+                </div>
+            </div>
+        </div>
+    </form>
+    
+    <!-- System Actions -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-800">System Actions</h2>
+        </div>
+        
+        <div class="px-6 py-4 space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button 
+                    class="bg-yellow-600 hover:bg-yellow-700 text-white font-medium py-3 px-4 rounded-lg shadow-sm transition duration-150"
+                    hx-post="/api/system/restart"
+                    hx-confirm="Are you sure you want to restart the application? This will disconnect all devices.">
+                    <span class="flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Restart Application
+                    </span>
+                </button>
+                
+                <button 
+                    class="bg-red-600 hover:bg-red-700 text-white font-medium py-3 px-4 rounded-lg shadow-sm transition duration-150"
+                    hx-post="/api/devices/reset"
+                    hx-confirm="Are you sure you want to reset all devices? This will delete all device data and cannot be undone.">
+                    <span class="flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        Reset All Devices
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Handle form submission feedback
+        const settingsForm = document.getElementById('settings-form');
+        const saveButton = document.getElementById('save-settings-btn');
+        
+        if (settingsForm) {
+            settingsForm.addEventListener('htmx:beforeRequest', function() {
+                saveButton.disabled = true;
+                saveButton.innerHTML = '<span class="flex items-center"><svg class="animate-spin h-5 w-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>Saving...</span>';
+            });
+            
+            settingsForm.addEventListener('htmx:afterRequest', function(event) {
+                saveButton.disabled = false;
+                
+                // Check if the request was successful
+                if (event.detail.xhr.status === 200) {
+                    saveButton.innerHTML = '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Settings Saved</span>';
+                    
+                    // Show a success notification
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg transform transition-transform duration-500 ease-in-out';
+                    notification.innerHTML = '<div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Settings saved successfully!</div>';
+                    document.body.appendChild(notification);
+                    
+                    // Remove the notification after 3 seconds
+                    setTimeout(function() {
+                        notification.classList.add('translate-y-20', 'opacity-0');
+                        setTimeout(function() {
+                            document.body.removeChild(notification);
+                        }, 500);
+                    }, 3000);
+                    
+                    // Reset the button text after 2 seconds
+                    setTimeout(function() {
+                        saveButton.innerHTML = '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Save Settings</span>';
+                    }, 2000);
+                } else {
+                    // Show an error notification
+                    saveButton.innerHTML = '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>Error</span>';
+                    
+                    const notification = document.createElement('div');
+                    notification.className = 'fixed bottom-4 right-4 bg-red-500 text-white px-6 py-3 rounded-lg shadow-lg';
+                    notification.innerHTML = '<div class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>Failed to save settings!</div>';
+                    document.body.appendChild(notification);
+                    
+                    // Remove the notification after 3 seconds
+                    setTimeout(function() {
+                        notification.classList.add('translate-y-20', 'opacity-0');
+                        setTimeout(function() {
+                            document.body.removeChild(notification);
+                        }, 500);
+                    }, 3000);
+                    
+                    // Reset the button text after 2 seconds
+                    setTimeout(function() {
+                        saveButton.innerHTML = '<span class="flex items-center"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>Save Settings</span>';
+                    }, 2000);
+                }
+            });
+        }
+        
+        // Generate API key button
+        const generateApiKeyBtn = document.getElementById('generate-api-key');
+        const apiKeyInput = document.getElementById('api_key');
+        
+        if (generateApiKeyBtn && apiKeyInput) {
+            generateApiKeyBtn.addEventListener('click', function() {
+                // Generate a random API key
+                const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+                let apiKey = '';
+                for (let i = 0; i < 32; i++) {
+                    apiKey += chars.charAt(Math.floor(Math.random() * chars.length));
+                }
+                
+                apiKeyInput.value = apiKey;
+                
+                // Flash the input to indicate the change
+                apiKeyInput.classList.add('bg-yellow-50');
+                setTimeout(function() {
+                    apiKeyInput.classList.remove('bg-yellow-50');
+                }, 300);
+            });
+        }
+        
+        // Toggle dependent fields based on checkbox states
+        const mqttEnabledCheckbox = document.getElementById('mqtt_enabled');
+        const mqttFields = document.querySelectorAll('[id^="mqtt_"]:not(#mqtt_enabled)');
+        
+        if (mqttEnabledCheckbox && mqttFields.length > 0) {
+            function toggleMqttFields() {
+                const isEnabled = mqttEnabledCheckbox.checked;
+                mqttFields.forEach(field => {
+                    field.disabled = !isEnabled;
+                    field.parentElement.classList.toggle('opacity-50', !isEnabled);
+                });
+            }
+            
+            // Initial state
+            toggleMqttFields();
+            
+            // Listen for changes
+            mqttEnabledCheckbox.addEventListener('change', toggleMqttFields);
+        }
+        
+        // Similar logic for voice recognition
+        const voiceEnabledCheckbox = document.getElementById('voice_enabled');
+        const voiceFields = document.querySelectorAll('[id^="voice_"]:not(#voice_enabled)');
+        
+        if (voiceEnabledCheckbox && voiceFields.length > 0) {
+            function toggleVoiceFields() {
+                const isEnabled = voiceEnabledCheckbox.checked;
+                voiceFields.forEach(field => {
+                    field.disabled = !isEnabled;
+                    field.parentElement.classList.toggle('opacity-50', !isEnabled);
+                });
+            }
+            
+            // Initial state
+            toggleVoiceFields();
+            
+            // Listen for changes
+            voiceEnabledCheckbox.addEventListener('change', toggleVoiceFields);
+        }
+        
+        // API key required checkbox
+        const apiKeyRequiredCheckbox = document.getElementById('api_key_required');
+        const apiKeyField = document.getElementById('api_key');
+        const generateApiKeyButton = document.getElementById('generate-api-key');
+        
+        if (apiKeyRequiredCheckbox && apiKeyField && generateApiKeyButton) {
+            function toggleApiKeyField() {
+                const isRequired = apiKeyRequiredCheckbox.checked;
+                apiKeyField.disabled = !isRequired;
+                generateApiKeyButton.disabled = !isRequired;
+                apiKeyField.parentElement.classList.toggle('opacity-50', !isRequired);
+            }
+            
+            // Initial state
+            toggleApiKeyField();
+            
+            // Listen for changes
+            apiKeyRequiredCheckbox.addEventListener('change', toggleApiKeyField);
+        }
+    });
+</script>
+{% endblock %}

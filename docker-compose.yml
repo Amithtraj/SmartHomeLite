@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  smarthome-lite:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: smarthome-lite
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./data:/app/data
+      - ./.env:/app/.env
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=8000
+      - DEBUG_MODE=false
+    # For Bluetooth access
+    network_mode: host
+    privileged: true
+    # For MQTT integration (optional)
+    depends_on:
+      - mqtt
+
+  # Optional MQTT broker
+  mqtt:
+    image: eclipse-mosquitto:latest
+    container_name: mqtt-broker
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mqtt/config:/mosquitto/config
+      - ./mqtt/data:/mosquitto/data
+      - ./mqtt/log:/mosquitto/log
+
+volumes:
+  data:

@@ -1,0 +1,247 @@
+/* SmartHomeLite Custom Styles */
+
+/* Custom utility classes */
+.transition-all {
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+}
+
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: .5;
+    }
+}
+
+/* Status indicators */
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+}
+
+.status-online {
+    background-color: #10B981; /* green-500 */
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.status-offline {
+    background-color: #EF4444; /* red-500 */
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.status-unknown {
+    background-color: #9CA3AF; /* gray-400 */
+    box-shadow: 0 0 0 3px rgba(156, 163, 175, 0.2);
+}
+
+/* Device type badges */
+.device-type-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.device-type-bluetooth {
+    background-color: #E0E7FF; /* indigo-100 */
+    color: #4F46E5; /* indigo-600 */
+}
+
+.device-type-mqtt {
+    background-color: #EDE9FE; /* purple-100 */
+    color: #7C3AED; /* purple-600 */
+}
+
+.device-type-virtual {
+    background-color: #FEF3C7; /* yellow-100 */
+    color: #D97706; /* yellow-600 */
+}
+
+.device-type-other {
+    background-color: #F3F4F6; /* gray-100 */
+    color: #4B5563; /* gray-600 */
+}
+
+/* Command console styling */
+.command-console {
+    font-family: 'Courier New', monospace;
+    background-color: #1F2937; /* gray-800 */
+    color: #F9FAFB; /* gray-50 */
+    border-radius: 0.5rem;
+    padding: 1rem;
+    height: 12rem;
+    overflow-y: auto;
+}
+
+.command-console .command-input {
+    color: #10B981; /* green-500 */
+}
+
+.command-console .command-output {
+    color: #F9FAFB; /* gray-50 */
+}
+
+.command-console .command-error {
+    color: #EF4444; /* red-500 */
+}
+
+/* Custom card hover effects */
+.card-hover {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom button styles */
+.btn-primary {
+    background-color: #3B82F6; /* blue-500 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: #2563EB; /* blue-600 */
+}
+
+.btn-secondary {
+    background-color: #6B7280; /* gray-500 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: #4B5563; /* gray-600 */
+}
+
+.btn-danger {
+    background-color: #EF4444; /* red-500 */
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.btn-danger:hover {
+    background-color: #DC2626; /* red-600 */
+}
+
+/* Custom switch toggle */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 48px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #E5E7EB; /* gray-200 */
+    transition: .4s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #3B82F6; /* blue-500 */
+}
+
+input:focus + .toggle-slider {
+    box-shadow: 0 0 1px #3B82F6; /* blue-500 */
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(24px);
+}
+
+/* Notification styles */
+.notification {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.notification-success {
+    background-color: #10B981; /* green-500 */
+    color: white;
+}
+
+.notification-error {
+    background-color: #EF4444; /* red-500 */
+    color: white;
+}
+
+.notification-info {
+    background-color: #3B82F6; /* blue-500 */
+    color: white;
+}
+
+.notification-icon {
+    margin-right: 0.75rem;
+}
+
+.notification-hidden {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .hide-on-mobile {
+        display: none;
+    }
+    
+    .mobile-full-width {
+        width: 100%;
+    }
+}

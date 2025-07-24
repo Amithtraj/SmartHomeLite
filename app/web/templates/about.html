@@ -1,0 +1,294 @@
+{% extends "base.html" %}
+
+{% block title %}About - SmartHomeLite{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Page header -->
+    <div class="flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-gray-800">About SmartHomeLite</h1>
+    </div>
+    
+    <!-- About card -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-800">Project Information</h2>
+        </div>
+        
+        <div class="px-6 py-4 space-y-6">
+            <div class="flex items-center justify-center py-4">
+                <div class="text-center">
+                    <div class="flex justify-center mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-2">SmartHomeLite</h1>
+                    <p class="text-gray-600 mb-4">A Python-Based Local Smart Home Hub for Android (Termux)</p>
+                    <p class="text-sm text-gray-500">Version {{ system_info.app_version }}</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Description</h3>
+                    <p class="text-gray-600 mb-4">
+                        SmartHomeLite is a lightweight, Python-based smart home hub designed to run on Android devices using Termux. 
+                        It provides a local solution for managing and controlling smart home devices without relying on cloud services.
+                    </p>
+                    <p class="text-gray-600">
+                        The project focuses on simplicity, extensibility, and privacy, allowing users to control their smart home 
+                        devices through a local network without sending data to external servers.
+                    </p>
+                </div>
+                
+                <div>
+                    <h3 class="text-lg font-medium text-gray-800 mb-3">Features</h3>
+                    <ul class="space-y-2 text-gray-600">
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Bluetooth device discovery and control
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            RESTful API for device management
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Responsive web dashboard
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Optional MQTT integration
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Optional voice control capabilities
+                        </li>
+                        <li class="flex items-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-500 mr-2 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            Extensible architecture for future integrations
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- System Information -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-800">System Information</h2>
+        </div>
+        
+        <div class="px-6 py-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Hostname</h3>
+                        <p class="mt-1 text-sm text-gray-900">{{ system_info.hostname }}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Platform</h3>
+                        <p class="mt-1 text-sm text-gray-900">{{ system_info.platform }}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Python Version</h3>
+                        <p class="mt-1 text-sm text-gray-900">{{ system_info.python_version }}</p>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Uptime</h3>
+                        <p class="mt-1 text-sm text-gray-900">{{ system_info.uptime }}</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-4">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">CPU Usage</h3>
+                        <div class="mt-1 relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-blue-600">
+                                        {{ system_info.cpu_usage }}%
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                                <div style="width:{{ system_info.cpu_usage }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-600"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Memory Usage</h3>
+                        <div class="mt-1 relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-green-600">
+                                        {{ system_info.memory_usage }}%
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
+                                <div style="width:{{ system_info.memory_usage }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-600"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-500">Disk Usage</h3>
+                        <div class="mt-1 relative pt-1">
+                            <div class="flex mb-2 items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-semibold inline-block text-purple-600">
+                                        {{ system_info.disk_usage }}%
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="overflow-hidden h-2 mb-4 text-xs flex rounded bg-purple-200">
+                                <div style="width:{{ system_info.disk_usage }}%" class="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-purple-600"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Tech Stack -->
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="px-6 py-4 border-b border-gray-200">
+            <h2 class="text-lg font-medium text-gray-800">Tech Stack</h2>
+        </div>
+        
+        <div class="px-6 py-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="p-2 rounded-full bg-blue-100 text-blue-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Python</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Core programming language (3.11+)</p>
+                </div>
+                
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="p-2 rounded-full bg-green-100 text-green-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6l3 1m0 0l-3 9a5.002 5.002 0 006.001 0M6 7l3 9M6 7l6-2m6 2l3-1m-3 1l-3 9a5.002 5.002 0 006.001 0M18 7l3 9m-3-9l-6-2m0-2v2m0 16V5m0 16H9m3 0h3" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">FastAPI</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Web framework for building APIs</p>
+                </div>
+                
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="p-2 rounded-full bg-indigo-100 text-indigo-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">PyBluez</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Bluetooth communication library</p>
+                </div>
+                
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="p-2 rounded-full bg-yellow-100 text-yellow-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Paho-MQTT</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">MQTT client library (optional)</p>
+                </div>
+                
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="p-2 rounded-full bg-red-100 text-red-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">Voice Recognition</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Speech recognition or Vosk (optional)</p>
+                </div>
+                
+                <div class="p-4 border border-gray-200 rounded-lg">
+                    <div class="flex items-center mb-3">
+                        <div class="p-2 rounded-full bg-purple-100 text-purple-600 mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                            </svg>
+                        </div>
+                        <h3 class="text-lg font-medium text-gray-800">HTMX + Jinja2</h3>
+                    </div>
+                    <p class="text-sm text-gray-600">Frontend technologies</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="text-center text-gray-500 text-sm mt-8">
+        <p>SmartHomeLite is an open-source project.</p>
+        <p class="mt-2">© 2023 SmartHomeLite</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-refresh system information every 30 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        setInterval(function() {
+            fetch('/api/system/info')
+                .then(response => response.json())
+                .then(data => {
+                    // Update CPU usage
+                    document.querySelector('span.text-blue-600').textContent = data.cpu_usage + '%';
+                    document.querySelector('div.bg-blue-600').style.width = data.cpu_usage + '%';
+                    
+                    // Update Memory usage
+                    document.querySelector('span.text-green-600').textContent = data.memory_usage + '%';
+                    document.querySelector('div.bg-green-600').style.width = data.memory_usage + '%';
+                    
+                    // Update Disk usage
+                    document.querySelector('span.text-purple-600').textContent = data.disk_usage + '%';
+                    document.querySelector('div.bg-purple-600').style.width = data.disk_usage + '%';
+                    
+                    // Update uptime
+                    const uptimeElement = document.querySelector('h3:contains("Uptime")').nextElementSibling;
+                    if (uptimeElement) {
+                        uptimeElement.textContent = data.uptime;
+                    }
+                })
+                .catch(error => console.error('Error fetching system info:', error));
+        }, 30000); // 30 seconds
+    });
+</script>
+{% endblock %}
