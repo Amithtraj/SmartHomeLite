@@ -1,5 +1,6 @@
 # SmartHomeLite
 [![Up-for-Grabs](https://img.shields.io/badge/up--for--grabs-yes-brightgreen.svg)](https://up-for-grabs.net/)
+[![Open Source Helpers](https://www.codetriage.com/amithtraj/smarthomelite/badges/users.svg)](https://www.codetriage.com/amithtraj/smarthomelite)
 
 SmartHomeLite is a lightweight, modular **Python-based smart home hub** that runs directly on an **Android phone** using **Termux**. The phone acts as the local brain, and you can control the entire setup from a **Windows laptop** via **ADB (Android Debug Bridge)** and a web-based interface or REST API.
 
