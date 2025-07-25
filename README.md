@@ -54,7 +54,7 @@ This allows you to turn an old phone into a private, offline-ready smart hub for
 ```bash
 pkg update && pkg upgrade
 pkg install git python
-git clone https://github.com/YOUR_USERNAME/SmartHomeLite.git
+git clone https://github.com/Amithtraj/SmartHomeLite.git
 cd SmartHomeLite
 bash termux_setup.sh
 ```
